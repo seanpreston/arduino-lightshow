@@ -45,9 +45,9 @@ void loop() {
 
 
 void translateIR() {
+  Serial.println("translateIR");
 
   random_palette();
-  currentBlending = LINEARBLEND;
 
   // switch(results.value) {
   //   case 0xFF30CF: Serial.println(" 1");    break;
@@ -76,6 +76,7 @@ void translateIR() {
 
 
 void random_palette() {
+  Serial.println("random_palette");
   CRGB purple = CHSV( HUE_PURPLE, 255, 255);
   CRGB green  = CHSV( HUE_GREEN, 255, 255);
   CRGB black  = CRGB::Black;
@@ -100,12 +101,13 @@ void random_palette() {
 
 
 void FillLEDsFromPaletteColors(uint8_t colorIndex) {
-    uint8_t brightness = 255;
+  Serial.println("FillLEDsFromPaletteColors");
+  uint8_t brightness = 255;
 
-    for( int i = 0; i < NUM_LEDS; i++) {
-        leds[i] = ColorFromPalette( currentPalette, colorIndex, brightness, currentBlending);
-        colorIndex += 3;
-    }
+  for(int i = 0; i < NUM_LEDS; i++) {
+      leds[i] = ColorFromPalette( currentPalette, colorIndex, brightness, currentBlending);
+      colorIndex += 3;
+  }
 }
 
 
