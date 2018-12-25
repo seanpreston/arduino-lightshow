@@ -49,6 +49,7 @@ void loop() {
 
 void translateIR() {
 
+  Serial.println("input value is:");
   Serial.println(results.value);
 
   // switch(results.value) {
