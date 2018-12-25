@@ -1,14 +1,4 @@
 #include "IRremote.h"
-#include <FastLED.h>
-
-#define LED_PIN     5
-#define NUM_LEDS    50
-#define BRIGHTNESS  64
-#define LED_TYPE    WS2811
-#define COLOR_ORDER GRB
-CRGB leds[NUM_LEDS];
-
-#define UPDATES_PER_SECOND 100
 
 int receiver = 11; // Signal Pin of IR receiver to Arduino Digital Pin 11
 
@@ -16,22 +6,7 @@ int receiver = 11; // Signal Pin of IR receiver to Arduino Digital Pin 11
 IRrecv irrecv(receiver);     // create instance of 'irrecv'
 decode_results results;      // create instance of 'decode_results'
 
-CRGBPalette16 currentPalette;
-TBlendType    currentBlending;
-
-extern CRGBPalette16 myRedWhiteBluePalette;
-extern const TProgmemPalette16 myRedWhiteBluePalette_p PROGMEM;
-
 void setup() {
-  delay(3000); // power-up safety delay
-  FastLED.addLeds<LED_TYPE, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(
-    TypicalLEDStrip
-  );
-  FastLED.setBrightness(BRIGHTNESS);
-
-  currentPalette = RainbowColors_p;
-  currentBlending = LINEARBLEND;
-
   Serial.begin(9600);
   Serial.println("IR Receiver Button Decode");
   irrecv.enableIRIn(); // Start the receiver
@@ -48,8 +23,7 @@ void loop() {
 
 
 void translateIR() {
-
-  Serial.println("input value is:");
+  Serial.println("Results are: ");
   Serial.println(results.value);
 
   // switch(results.value) {
