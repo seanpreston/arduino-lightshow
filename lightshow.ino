@@ -3,6 +3,7 @@
 
 #define LED_PIN     5
 #define NUM_LEDS    50
+// #define NUM_LEDS    1
 #define BRIGHTNESS  64
 #define LED_TYPE    WS2811
 #define COLOR_ORDER GRB
@@ -77,26 +78,32 @@ void translateIR() {
 
 void random_palette() {
   Serial.println("random_palette");
-  CRGB purple = CHSV( HUE_PURPLE, 255, 255);
-  CRGB green  = CHSV( HUE_GREEN, 255, 255);
-  CRGB black  = CRGB::Black;
+  FastLED.clear();
 
-  currentPalette = CRGBPalette16(
-                                 green,  green,  black,  black,
-                                 purple, purple, black,  black,
-                                 green,  green,  black,  black,
-                                 purple, purple, black,  black );
-
-  for(int i = 0; i < 16; i++) {
-      currentPalette[i] = CHSV( random8(), 255, random8());
+  // CRGB purple = CHSV( HUE_PURPLE, 255, 255);
+  // CRGB green  = CHSV( HUE_GREEN, 255, 255);
+  // CRGB black  = CRGB::Black;
+  //
+  // currentPalette = CRGBPalette16(
+  //                                green,  green,  black,  black,
+  //                                purple, purple, black,  black,
+  //                                green,  green,  black,  black,
+  //                                purple, purple, black,  black );
+  //
+  // for(int i = 0; i < 16; i++) {
+  //     currentPalette[i] = CHSV( random8(), 255, random8());
+  // }
+  //
+  // static uint8_t startIndex = 0;
+  // startIndex = startIndex + 1; /* motion speed */
+  //
+  // FillLEDsFromPaletteColors(startIndex);
+  //
+  for(int i = 0; i < NUM_LEDS; i++) {
+    leds[i].setRGB(0, 0, 255);
   }
-
-  static uint8_t startIndex = 0;
-  startIndex = startIndex + 1; /* motion speed */
-
-  FillLEDsFromPaletteColors(startIndex);
-
   FastLED.show();
+  // FastLED.delay(1000 / UPDATES_PER_SECOND);
 }
 
 
@@ -105,8 +112,8 @@ void FillLEDsFromPaletteColors(uint8_t colorIndex) {
   uint8_t brightness = 255;
 
   for(int i = 0; i < NUM_LEDS; i++) {
-      leds[i] = ColorFromPalette( currentPalette, colorIndex, brightness, currentBlending);
-      colorIndex += 3;
+    leds[i] = ColorFromPalette( currentPalette, colorIndex, brightness, currentBlending);
+    colorIndex += 3;
   }
 }
 
