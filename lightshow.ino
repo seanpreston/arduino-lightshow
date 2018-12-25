@@ -46,27 +46,86 @@ void loop() {
 
 void translateIR() {
 
-  switch(results.value) {
-    case 0xFF30CF: Serial.println(" 1");    break;
-    case 0xFF18E7: Serial.println(" 2");    break;
-    case 0xFF7A85: Serial.println(" 3");    break;
-    // case 0xFF629D: Serial.println(" FORWARD"); break;
-    // case 0xFF22DD: Serial.println(" LEFT");    break;
-    // case 0xFF02FD: Serial.println(" -OK-");    break;
-    // case 0xFFC23D: Serial.println(" RIGHT");   break;
-    // case 0xFFA857: Serial.println(" REVERSE"); break;
-    // case 0xFF6897: Serial.println(" 1");    break;
-    // case 0xFF9867: Serial.println(" 2");    break;
-    // case 0xFFB04F: Serial.println(" 3");    break;
-    // case 0xFF10EF: Serial.println(" 7");    break;
-    // case 0xFF38C7: Serial.println(" 8");    break;
-    // case 0xFF5AA5: Serial.println(" 9");    break;
-    // case 0xFF42BD: Serial.println(" *");    break;
-    // case 0xFF4AB5: Serial.println(" 0");    break;
-    // case 0xFF52AD: Serial.println(" #");    break;
-    // case 0xFFFFFFFF: Serial.println(" REPEAT");break;
+  random_palette();
+  currentBlending = LINEARBLEND;
 
-    default:
-      Serial.println("unknown input");
-  }
+  // switch(results.value) {
+  //   case 0xFF30CF: Serial.println(" 1");    break;
+  //   case 0xFF18E7: Serial.println(" 2");    break;
+  //   case 0xFF7A85: Serial.println(" 3");    break;
+  //   // case 0xFF629D: Serial.println(" FORWARD"); break;
+  //   // case 0xFF22DD: Serial.println(" LEFT");    break;
+  //   // case 0xFF02FD: Serial.println(" -OK-");    break;
+  //   // case 0xFFC23D: Serial.println(" RIGHT");   break;
+  //   // case 0xFFA857: Serial.println(" REVERSE"); break;
+  //   // case 0xFF6897: Serial.println(" 1");    break;
+  //   // case 0xFF9867: Serial.println(" 2");    break;
+  //   // case 0xFFB04F: Serial.println(" 3");    break;
+  //   // case 0xFF10EF: Serial.println(" 7");    break;
+  //   // case 0xFF38C7: Serial.println(" 8");    break;
+  //   // case 0xFF5AA5: Serial.println(" 9");    break;
+  //   // case 0xFF42BD: Serial.println(" *");    break;
+  //   // case 0xFF4AB5: Serial.println(" 0");    break;
+  //   // case 0xFF52AD: Serial.println(" #");    break;
+  //   // case 0xFFFFFFFF: Serial.println(" REPEAT");break;
+  //
+  //   default:
+  //     Serial.println("unknown input");
+  // }
 }
+
+
+void random_palette() {
+  CRGB purple = CHSV( HUE_PURPLE, 255, 255);
+  CRGB green  = CHSV( HUE_GREEN, 255, 255);
+  CRGB black  = CRGB::Black;
+
+  currentPalette = CRGBPalette16(
+                                 green,  green,  black,  black,
+                                 purple, purple, black,  black,
+                                 green,  green,  black,  black,
+                                 purple, purple, black,  black );
+
+  for(int i = 0; i < 16; i++) {
+      currentPalette[i] = CHSV( random8(), 255, random8());
+  }
+
+  static uint8_t startIndex = 0;
+  startIndex = startIndex + 1; /* motion speed */
+
+  FillLEDsFromPaletteColors(startIndex);
+
+  FastLED.show();
+}
+
+
+void FillLEDsFromPaletteColors(uint8_t colorIndex) {
+    uint8_t brightness = 255;
+
+    for( int i = 0; i < NUM_LEDS; i++) {
+        leds[i] = ColorFromPalette( currentPalette, colorIndex, brightness, currentBlending);
+        colorIndex += 3;
+    }
+}
+
+
+const TProgmemPalette16 myRedWhiteBluePalette_p PROGMEM = {
+    CRGB::Red,
+    CRGB::Gray, // 'white' is too bright compared to red and blue
+    CRGB::Blue,
+    CRGB::Black,
+
+    CRGB::Red,
+    CRGB::Gray,
+    CRGB::Blue,
+    CRGB::Black,
+
+    CRGB::Red,
+    CRGB::Red,
+    CRGB::Gray,
+    CRGB::Gray,
+    CRGB::Blue,
+    CRGB::Blue,
+    CRGB::Black,
+    CRGB::Black
+};
